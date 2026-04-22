@@ -1,15 +1,14 @@
 import requests
-import os
+import winsound
 
 SERVER = "http://192.168.1.15:8000"
 
 def falar(texto):
     r = requests.get(f"{SERVER}/tts", params={"texto": texto})
+    r.raise_for_status()
 
-    with open("audio.wav", "wb") as f:
-        f.write(r.content)
-
-    os.system("start audio.wav")  # Windows
+    # Reproduz o WAV recebido sem salvar um arquivo local.
+    winsound.PlaySound(r.content, winsound.SND_MEMORY)
 
 
 while True:

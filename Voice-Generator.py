@@ -1,31 +1,26 @@
 from fastapi import FastAPI
-from fastapi.responses import FileResponse
-import subprocess
-import uuid
-import os
+from fastapi.responses import Response
+from io import BytesIO
+from pathlib import Path
+import wave
+from piper import PiperVoice
 from RunLLM import gerar_resposta
 
 app = FastAPI()
 
-PIPER = "piper"
 MODEL = "./voice-model/pt_BR-faber-medium.onnx"
+VOICE = PiperVoice.load(Path(MODEL))
 
 def gerar_audio(texto):
     resposta = gerar_resposta(texto)
-    os.makedirs("aud", exist_ok=True)
 
-    out_file = f"aud/{uuid.uuid4().hex}.wav"
-
-    subprocess.run([
-        PIPER,
-        "--model", MODEL,
-        "--output_file", out_file
-    ], input=resposta, text=True)
-
-    return out_file
+    with BytesIO() as buffer:
+        with wave.open(buffer, "wb") as wav_file:
+            VOICE.synthesize_wav(resposta, wav_file)
+        return buffer.getvalue()
 
 
 @app.get("/tts")
 def tts(texto: str):
     audio = gerar_audio(texto)
-    return FileResponse(audio, media_type="audio/wav")
+    return Response(content=audio, media_type="audio/wav")
