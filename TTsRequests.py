@@ -1,7 +1,7 @@
 import requests
 import os
 
-SERVER = "http://IP_DO_SEU_SERVIDOR:8000"
+SERVER = "http://192.168.1.15:8000"
 
 def falar(texto):
     r = requests.get(f"{SERVER}/tts", params={"texto": texto})

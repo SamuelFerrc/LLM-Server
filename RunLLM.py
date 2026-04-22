@@ -17,18 +17,14 @@ llm = Llama(
     n_threads=4
 )
 
-while True:
-    prompt = input()
-    if prompt == "quit":
-        break
-
-    print("Resposta:")
+def gerar_resposta(prompt: str, max_tokens: int = 100) -> str:
+    resposta = ""
 
     for chunk in llm(
         prompt,
-        max_tokens=100,
-        stream=True  # 🔥 ISSO AQUI
+        max_tokens=max_tokens,
+        stream=True
     ):
-        print(chunk["choices"][0]["text"], end="", flush=True)
+        resposta += chunk["choices"][0]["text"]
 
-    print("\n")
+    return resposta
