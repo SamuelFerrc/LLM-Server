@@ -1,9 +1,20 @@
+import os
 from llama_cpp import Llama
 
+model_dir = "model"
+
+gguf_files = [f for f in os.listdir(model_dir) if f.endswith(".gguf")]
+
+if not gguf_files:
+    raise Exception("Nenhum modelo .gguf encontrado!")
+
+model_path = os.path.join(model_dir, gguf_files[0])
+
+print("Usando modelo:", model_path)
+
 llm = Llama(
-    model_path="Mistral-Nemo-2407-12B-Thinking-Claude-Gemini-GPT5.2-Uncensored-HERETIC.Q2_K.gguf",
-    n_threads=4,
-    n_ctx=512
+    model_path=model_path,
+    n_threads=4
 )
 
 while True:
