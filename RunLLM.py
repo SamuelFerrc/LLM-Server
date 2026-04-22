@@ -17,7 +17,7 @@ llm = Llama(
     n_threads=4
 )
 
-def gerar_resposta(prompt: str, max_tokens: int = 100) -> str:
+def gerar_resposta(prompt: str, max_tokens: int = 50) -> str:
     resposta = ""
 
     for chunk in llm(
@@ -26,5 +26,5 @@ def gerar_resposta(prompt: str, max_tokens: int = 100) -> str:
         stream=True
     ):
         resposta += chunk["choices"][0]["text"]
-
+    print(resposta)
     return resposta
