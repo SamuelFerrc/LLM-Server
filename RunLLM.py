@@ -1,7 +1,7 @@
 import os
 from llama_cpp import Llama
 
-model_dir = "model"
+model_dir = "text-model"
 
 gguf_files = [f for f in os.listdir(model_dir) if f.endswith(".gguf")]
 
