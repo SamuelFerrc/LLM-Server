@@ -1,7 +1,7 @@
 import requests
 import winsound
 
-SERVER = "http://192.168.1.15:8000"
+SERVER = "http://"
 
 def falar(texto):
     r = requests.get(f"{SERVER}/tts", params={"texto": texto})
