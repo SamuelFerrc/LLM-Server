@@ -4,7 +4,7 @@ import sounddevice as sd
 import numpy as np
 from faster_whisper import WhisperModel
 
-SERVER = "http://192.168.1.15:8000"
+SERVER = "http://"
 
 model = WhisperModel(
     "small",
