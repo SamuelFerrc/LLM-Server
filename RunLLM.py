@@ -18,7 +18,7 @@ llm = Llama(
 )
 
 # 🔹 contexto inicial fixo (em português)
-SYSTEM_PROMPT = """Você é um assistente útil, direto e técnico.
+SYSTEM_PROMPT = """Você se chama Cortex é um assistente útil, direto e técnico.
 Responda de forma clara e objetiva."""
 
 # 🔹 memória

@@ -1,19 +1,19 @@
 import requests
 import winsound
 import sounddevice as sd
-import numpy as np
-from faster_whisper import WhisperModel
+import queue
+import json
+from vosk import Model, KaldiRecognizer
 
-SERVER = "http://"
+SERVER = "http://192.168.1.15:8000"
 
-model = WhisperModel(
-    "small",
-    device="cpu",
-    compute_type="int8"
-)
+# Caminho da pasta do modelo Vosk (ajuste aqui)
+model_path = "voice-model/vosk-model-small-pt-0.3"
+
+model = Model(model_path)
 
 samplerate = 16000
-block_duration = 3
+q = queue.Queue()
 
 
 def falar(texto):
@@ -22,27 +22,35 @@ def falar(texto):
     winsound.PlaySound(r.content, winsound.SND_MEMORY)
 
 
+def callback(indata, frames, time, status):
+    if status:
+        print(status)
+    q.put(bytes(indata))
+
+
 def ouvir_microfone():
     print("🎤 Fale algo...")
 
-    audio = sd.rec(
-        int(block_duration * samplerate),
+    rec = KaldiRecognizer(model, samplerate)
+
+    with sd.RawInputStream(
         samplerate=samplerate,
+        blocksize=8000,
+        dtype="int16",
         channels=1,
-        dtype=np.float32
-    )
+        callback=callback
+    ):
+        texto_final = ""
 
-    sd.wait()
-    audio = np.squeeze(audio)
+        while True:
+            data = q.get()
 
-    segments, _ = model.transcribe(audio, language="pt")
+            if rec.AcceptWaveform(data):
+                result = json.loads(rec.Result())
+                texto_final += result.get("text", "")
+                break
 
-    texto_final = ""
-
-    for segment in segments:
-        texto_final += segment.text + " "
-
-    return texto_final.strip()
+        return texto_final.strip()
 
 
 while True:
