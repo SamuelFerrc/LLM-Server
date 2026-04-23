@@ -1,0 +1,25 @@
+{
+  "listar_arquivos": {
+    "examples": [
+      "listar arquivos",
+      "mostrar arquivos",
+      "ver arquivos da pasta"
+    ],
+    "command": "dir"
+  },
+  "voltar_pasta": {
+    "examples": [
+      "voltar uma pasta",
+      "subir diretório",
+      "cd anterior"
+    ],
+    "command": "cd .."
+  },
+  "limpar_tela": {
+    "examples": [
+      "limpar tela",
+      "limpar terminal"
+    ],
+    "command": "cls"
+  }
+}

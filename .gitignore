@@ -1,2 +1,2 @@
 *.gguf
-TTsRequests.py
+client/TTsRequests.py
