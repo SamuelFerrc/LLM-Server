@@ -14,7 +14,7 @@ print("Usando modelo:", model_path)
 
 llm = Llama(
     model_path=model_path,
-    n_threads=4
+    n_threads=2
 )
 
 # 🔹 contexto inicial fixo (em português)

@@ -13,7 +13,7 @@ model_path = os.path.join(model_dir, gguf_files[0])
 
 llm = Llama(
     model_path=model_path,
-    n_threads=4
+    n_threads=2
 )
 
 # 🔹 carregar comandos
