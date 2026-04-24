@@ -15,13 +15,15 @@ VOICE = PiperVoice.load(Path(MODEL))
 def gerar_audio(text):
     global count
     intention = classify_speech_act(text)
+    print("gerar_audio(): " + intention)
     if intention != "ORDEM":
         response = generate_response(text, intention,50)
     else:
         cmd_response = generate_command(text)
-        response = generate_response(f"Você vai usar este comando '{cmd_response}', fale sobre ele como se estivesse apresentando ele", intention,50)
-
-    print("gerar_audio(): " + intention)
+        if cmd_response != "":
+            response = generate_response(f"Você vai usar este comando '{cmd_response}', siga a seguinte ordem na sua fala, inicialmente confirme que irá realizar a tarefa, depois diga qual comando irá usar, não precisa explicar o comando", intention,50)
+        else:
+            response = "Desculpa, não entendi o que quis dizer"
     if intention == "ORDEM":
         print("gerar_audio(): " + cmd_response)
 

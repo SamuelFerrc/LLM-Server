@@ -16,7 +16,8 @@ QUESTION_MARKERS = [
 COMMAND_VERBS = [
     "abra", "feche", "execute", "rode", "crie", "delete",
     "remova", "instale", "inicie", "pare", "desligue", "ligue",
-    "mostre", "liste", "copie", "mova", "renomeie"
+    "mostre", "liste", "copie", "mova", "renomeie", "quero que", "faça",
+    "isto é uma ordem"
 ]
 
 POLITE_MARKERS = [
@@ -61,7 +62,8 @@ def has_instruction(text):
 
 def classify_speech_act(text):
     text = normalize(text)
-
+    if "quero que" in text.lower():
+        return "ORDEM"
     question = has_question(text)
     command = has_command_verb(text)
     polite = has_polite_request(text)

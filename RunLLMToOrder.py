@@ -13,7 +13,8 @@ model_path = os.path.join(model_dir, gguf_files[0])
 
 llm = Llama(
     model_path=model_path,
-    n_threads=2
+    n_threads=8
+
 )
 
 # 🔹 carregar comandos
@@ -39,6 +40,7 @@ Intenções disponíveis:
 Frase: {user_input}
 
 Responda APENAS com o nome da intenção.
+NÃO deixe vazio.
 """
 
 
@@ -61,10 +63,3 @@ def generate_command(user_input: str) -> str:
     # 🔥 RETORNO FINAL: APENAS O COMANDO
     return COMMANDS[intent]["command"]
 
-
-# 🔹 loop
-while True:
-    user_input = input(">> ")
-
-    command = generate_command(user_input)
-    print(command)
