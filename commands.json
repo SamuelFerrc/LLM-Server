@@ -1,25 +1,26 @@
 {
-  "listar_arquivos": {
-    "examples": [
+ "listar_arquivos":{
+   "examples":[
       "listar arquivos",
-      "mostrar arquivos",
-      "ver arquivos da pasta"
-    ],
-    "command": "dir"
-  },
-  "voltar_pasta": {
-    "examples": [
-      "voltar uma pasta",
-      "subir diretório",
-      "cd anterior"
-    ],
-    "command": "cd .."
-  },
-  "limpar_tela": {
-    "examples": [
-      "limpar tela",
-      "limpar terminal"
-    ],
-    "command": "cls"
-  }
+      "mostrar arquivos"
+   ],
+   "command":"dir"
+ },
+
+ "ver_noticias":{
+   "examples":[
+      "mostrar noticias sobre X",
+      "quero noticias sobre X",
+      "quero que mostre noticias sobre X"
+
+   ],
+   "template":"python NewsReport/NewsSearch.py \"{query}\""
+ },
+
+ "abrir_arquivo":{
+   "examples":[
+      "abrir arquivo X"
+   ],
+   "template":"code {arg}"
+ }
 }

@@ -17,7 +17,7 @@ COMMAND_VERBS = [
     "abra", "feche", "execute", "rode", "crie", "delete",
     "remova", "instale", "inicie", "pare", "desligue", "ligue",
     "mostre", "liste", "copie", "mova", "renomeie", "quero que", "faça",
-    "isto é uma ordem"
+    "isto é uma ordem", "mostrar noticias"
 ]
 
 POLITE_MARKERS = [
@@ -80,14 +80,15 @@ def classify_speech_act(text):
 
     # 3. PEDIDO (comando + educação)
     if command and polite:
-        return "PEDIDO"
+        return "ORDEM"
 
     # 4. INSTRUÇÃO TÉCNICA (passo a passo, guia)
     if instruction:
-        return "INSTRUÇÃO_TÉCNICA"
+        return "ORDEM"
 
     # 5. SUGESTÃO
     if suggestion:
         return "SUGESTÃO"
 
     return "NEUTRO"
+
