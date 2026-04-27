@@ -9,6 +9,17 @@ DEFAULT_SYSTEM_PROMPT = (
 )
 
 
+def build_recent_logs_block(recent_logs: str | None) -> str:
+    if not recent_logs:
+        return ""
+
+    cleaned_logs = recent_logs.strip()
+    if not cleaned_logs:
+        return ""
+
+    return f"Logs recentes:\n{cleaned_logs}\n\n"
+
+
 def build_assistant_prompt(
     session: ConversationSession,
     intention: str,
@@ -40,6 +51,7 @@ def build_summary_prompt(full_text: str) -> str:
 def build_action_justification_prompt(
     session: ConversationSession,
     action: str,
+    recent_logs: str | None = None,
 ) -> str:
     context = session.system_prompt + "\n\n"
 
@@ -48,9 +60,11 @@ def build_action_justification_prompt(
 
     context += "Historico recente:\n"
     context += "\n".join(session.history[-10:])
+    context += "\n\n"
+    context += build_recent_logs_block(recent_logs)
 
     context += (
-        "\n\nCom base no historico da conversa, justifique de forma curta e objetiva "
+        "Com base no historico da conversa, justifique de forma curta e objetiva "
         "a acao abaixo.\n\n"
         f"Acao realizada:\n{action}\n\n"
         "Justificativa:\n"
@@ -58,7 +72,8 @@ def build_action_justification_prompt(
     return context
 
 
-def build_need_google_prompt(text: str) -> str:
+def build_need_google_prompt(text: str, recent_logs: str | None = None) -> str:
+
     return f"""
 Voce e um classificador binario chamado Cortex.
 
@@ -119,4 +134,3 @@ Resposta:
 
 def build_command_output_prompt(command_output: str) -> str:
     return f"Essas sao os resultados.\n\n{command_output}\n"
-

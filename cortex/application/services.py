@@ -80,14 +80,28 @@ class ConversationService:
 
 
 class ResearchDeciderService:
-    def __init__(self, model: TextModel):
+    def __init__(
+        self,
+        model: TextModel,
+        action_log_service: "ActionLogService | None" = None,
+    ):
         self._model = model
+        self._action_log_service = action_log_service
 
     def decide_from_prompt(self, prompt: str) -> str:
         return self._model.generate(prompt, max_tokens=5, stream=True).strip()
 
     def should_use_google(self, text: str) -> bool:
-        raw_response = self.decide_from_prompt(build_need_google_prompt(text))
+        recent_logs = ""
+        if self._action_log_service is not None:
+            recent_logs = self._action_log_service.render_recent_logs()
+
+        raw_response = self.decide_from_prompt(
+            build_need_google_prompt(
+                text,
+                recent_logs=recent_logs,
+            )
+        )
         return "1" in raw_response
 
 
@@ -101,10 +115,27 @@ class ActionLogService:
     def entries(self) -> list[ActionLogEntry]:
         return list(self._entries)
 
+    def render_recent_logs(self, limit: int = 5) -> str:
+        recent_entries = self._entries[-limit:]
+
+        if not recent_entries:
+            return ""
+
+        lines: list[str] = []
+        for index, item in enumerate(recent_entries, start=1):
+            lines.append(f"{index}. Acao: {item.action}")
+            lines.append(f"   Justificativa: {item.justification}")
+
+        return "\n".join(lines).strip()
+
     def add_log(self, action: str, justification: str | None = None) -> None:
         if justification is None:
             justification = self._model.generate(
-                build_action_justification_prompt(self._session, action),
+                build_action_justification_prompt(
+                    self._session,
+                    action,
+                    recent_logs=self.render_recent_logs(),
+                ),
                 max_tokens=80,
                 stop=ACTION_LOG_STOP_SEQUENCES,
             ).strip()
@@ -117,13 +148,7 @@ class ActionLogService:
         if not self._entries:
             return "Nenhum registro de log."
 
-        lines = ["LOG DE ACOES", ""]
-        for index, item in enumerate(self._entries, start=1):
-            lines.append(f"{index}. Acao: {item.action}")
-            lines.append(f"   Justificativa: {item.justification}")
-            lines.append("")
-
-        return "\n".join(lines).strip()
+        return f"LOG DE ACOES\n\n{self.render_recent_logs(limit=len(self._entries))}"
 
 
 class ActionService:
