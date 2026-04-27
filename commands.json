@@ -14,13 +14,13 @@
       "quero que mostre noticias sobre X"
 
    ],
-   "template":"python NewsReport/NewsSearch.py \"{query}\""
+   "template":"\"{python}\" NewsReport/NewsSearch.py \"{query}\""
  },
 
  "abrir_arquivo":{
    "examples":[
       "abrir arquivo X"
    ],
-   "template":"code {arg}"
+   "template":"code \"{arg}\""
  }
 }
